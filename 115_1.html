@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>115-1 何嘉仁線上主題研習</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        edu: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e3a8a',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px -8px rgba(30, 58, 138, 0.15);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pt-20 md:pt-24">
+
+    <!-- 固定頂部導航列 -->
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm z-40 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- 品牌標誌與標題 -->
+                <div class="flex items-center space-x-3 sm:space-x-4 select-none">
+                    <img src="logo.png" alt="HESS Logo" class="h-10 md:h-12 object-contain">
+                    <div>
+                        <h1 class="text-base sm:text-lg md:text-xl font-bold text-slate-800 leading-tight">115-1 何嘉仁線上主題研習</h1>
+                        <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">HESS Elementary School English Teachers’ Workshop</p>
+                    </div>
+                </div>
+
+                <!-- 搜尋框 -->
+                <div class="flex items-center">
+                    <div id="topSearchBox" class="relative hidden sm:block w-48 lg:w-64">
+                        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋研習主題或講師..." 
+                               class="w-full pl-9 pr-4 py-1.5 text-xs lg:text-sm bg-slate-100 border border-transparent rounded-full focus:bg-white focus:border-edu-500 focus:outline-none transition">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 研習活動展示區 -->
+    <main id="frontendView" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-6 md:my-8">
+        <!-- 行動裝置搜尋框 -->
+        <div class="sm:hidden mb-4">
+            <div class="relative w-full">
+                <input type="text" id="mobileSearchInput" oninput="handleMobileSearch()" placeholder="搜尋研習主題、講師或關鍵字..." 
+                       class="w-full pl-9 pr-4 py-2.5 text-xs bg-white border border-slate-200 rounded-xl focus:border-edu-500 focus:outline-none shadow-sm">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-slate-400"></i>
+            </div>
+        </div>
+
+        <!-- 標題與場次數量徽章配置 -->
+        <div class="relative flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 pb-6 border-b border-slate-200">
+            <h2 id="currentCategoryTitle" class="text-lg md:text-xl font-bold text-slate-800 flex flex-col items-center gap-1 text-center">
+                <div class="flex items-center">
+                    <!-- 替換為具色彩的 Emoji -->
+                    <span class="mr-2 text-2xl">🪄</span>AI工具運用：教師減負 X 精彩的英語課堂呈現
+                </div>
+                <div class="text-slate-800 flex items-center">
+                    🚀等您來探索 ✨
+                </div>
+            </h2>
+            
+            <!-- 將共計場次透過絕對定位 / Flex 對齊至網頁右側 -->
+            <div class="w-full sm:w-auto sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2 flex justify-end">
+                <div class="flex items-center space-x-2 text-xs md:text-sm text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg shrink-0">
+                    <span>共計 <strong id="eventCount" class="text-edu-600 font-semibold text-base">0</strong> 個研習場次</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 活動卡片 Grid -->
+        <div id="eventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"></div>
+
+        <!-- 無資料狀態 -->
+        <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
+                <i class="fa-regular fa-folder-open"></i>
+            </div>
+            <h3 class="text-base font-medium text-slate-700">未找到符合條件的研習活動</h3>
+            <p class="text-xs text-slate-400 mt-1">請調整搜尋關鍵字</p>
+        </div>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-6 md:py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-1.5">
+            <p>© 2026 何嘉仁文教機構 | 115-1 線上主題研習</p>
+            <p class="text-[11px] text-slate-400">旨在為教師提供高品質增能研習與課堂教學賦能工具</p>
+        </div>
+    </footer>
+
+    <!-- Google 表單報名彈出視窗 (Modal) -->
+    <div id="registerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden transform transition-all duration-200 scale-95 opacity-0 flex flex-col max-h-[92vh]" id="registerModalBox">
+            <!-- Modal Header -->
+            <div class="bg-slate-900 text-white p-4 sm:p-5 flex items-center justify-between shrink-0 border-b border-slate-800">
+                <div class="pr-4 flex items-center space-x-3">
+                    <div class="w-9 h-9 bg-edu-600 rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow">
+                        <i class="fa-solid fa-file-pen"></i>
+                    </div>
+                    <div>
+                        <span class="inline-block px-2 py-0.5 bg-edu-500/20 text-edu-300 border border-edu-500/30 rounded text-[10px] font-semibold mb-0.5">
+                            Google 表單線上報名
+                        </span>
+                        <h3 id="modalEventTitle" class="text-base sm:text-lg font-bold leading-tight">研習課程名稱</h3>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                    <a id="modalExternalFormBtn" href="#" target="_blank" rel="noopener noreferrer" title="在新分頁開啟表單" class="text-edu-200 hover:text-white bg-edu-600/30 hover:bg-edu-600/50 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center space-x-1.5 border border-edu-400/30">
+                        <span>新視窗開啟</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                    </a>
+                    <button onclick="closeRegisterModal()" class="text-slate-400 hover:text-white transition p-1.5 rounded-lg hover:bg-white/10">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Google Form Container -->
+            <div class="relative flex-grow bg-slate-100 min-h-[500px] sm:min-h-[600px] overflow-hidden">
+                <div id="formLoadingSpinner" class="absolute inset-0 flex flex-col items-center justify-center bg-white text-slate-600 z-10">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl text-edu-600 mb-3"></i>
+                    <span class="text-sm font-medium text-slate-700">正在連結載入 Google 報名表單...</span>
+                    <p class="text-xs text-slate-400 mt-1">若載入時間較長，可點選右上角「新視窗開啟」進行填寫</p>
+                </div>
+                <iframe id="googleFormIframe" src="" class="w-full h-full min-h-[500px] sm:min-h-[600px] border-0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let searchQuery = '';
+
+        // 更新研習活動資料
+        const events = [
+            {
+                id: 1,
+                title: "第一場：Fun 鬆學 AI：英語備課 Super Fun！",
+                mode: "online",
+                date: "115.11.21 (六) 9:30–12:30",
+                speaker: "陳慈君 Sandy 老師（莒光國小）",
+                // 移除「您」字
+                location: "線上會議室<br><strong class=\"text-edu-600\">(將於 2026/11/18 (三) 前，寄信至填寫的電子信箱)</strong>",
+                deadline: "11/13（五）23:59 截止",
+                isExpired: false,
+                tags: ["AI備課", "SuperFun", "英語教學"],
+                image: "115-1 1121.png",
+                googleFormUrl: "https://forms.gle/hcCE1cUcx4Nuwsk98"
+            },
+            {
+                id: 2,
+                title: "第二場：從繪本到真實學習：AI 時代的英語繪本課程再設計",
+                mode: "online",
+                date: "115.12.09 (三) 13:30–16:00",
+                speaker: "鍾昌益 Clark 老師（樂利國小）",
+                // 修正括號位置、移除「您」字
+                location: "線上會議室<br><strong class=\"text-edu-600\">(將於2026/12/7 (一) 前，寄信至填寫的電子信箱)</strong>",
+                deadline: "12/02（三）23:59 截止",
+                isExpired: false,
+                tags: ["繪本教學", "AI時代"],
+                // 修改為 png 附檔名
+                image: "115-1 1209.png",
+                googleFormUrl: "https://forms.gle/DvZYUG5FJgh4DiAC9"
+            }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderEvents();
+        });
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+            renderEvents();
+        }
+
+        function handleMobileSearch() {
+            searchQuery = document.getElementById('mobileSearchInput').value.trim().toLowerCase();
+            renderEvents();
+        }
+
+        // 渲染前台活動卡片
+        function renderEvents() {
+            const grid = document.getElementById('eventsGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            const filtered = events.filter(item => {
+                return !searchQuery || 
+                        item.title.toLowerCase().includes(searchQuery) ||
+                        item.speaker.toLowerCase().includes(searchQuery) ||
+                        (item.tags || []).some(t => t.toLowerCase().includes(searchQuery));
+            });
+
+            document.getElementById('eventCount').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(ev => {
+                const isExpired = !!ev.isExpired;
+
+                const modeTag = ev.mode === 'online' 
+                    ? `<span class="bg-blue-600 text-white text-[11px] px-2.5 py-0.5 rounded-full font-bold shadow-sm"><i class="fa-solid fa-video mr-1"></i>線上研習</span>`
+                    : `<span class="bg-emerald-600 text-white text-[11px] px-2.5 py-0.5 rounded-full font-bold shadow-sm"><i class="fa-solid fa-location-dot mr-1"></i>實體研習</span>`;
+
+                const statusTag = isExpired 
+                    ? `<span class="bg-slate-700 text-white text-[11px] px-2.5 py-0.5 rounded-full font-bold shadow-sm"><i class="fa-solid fa-lock mr-1"></i>已截止報名</span>`
+                    : '';
+
+                const tagsHtml = (ev.tags || []).map(tag => 
+                    `<span class="inline-block bg-blue-50 text-blue-700 font-semibold text-[11px] px-2.5 py-0.5 rounded-full border border-blue-200">#${tag}</span>`
+                ).join(' ');
+
+                // 如果有 deadline 設定，就會自動套用到按鈕後方
+                const deadlineText = ev.deadline ? `（${ev.deadline}）` : '';
+
+                // 報名按鈕
+                const buttonHtml = isExpired 
+                    ? `<button disabled class="w-full py-3 px-4 bg-slate-200 text-slate-500 font-bold text-sm md:text-base rounded-xl cursor-not-allowed border border-slate-300 shadow-none flex items-center justify-center">
+                        <span>報名已截止${deadlineText}</span>
+                       </button>`
+                    : `<button onclick="openRegisterModal(${ev.id})" class="w-full py-3 px-4 bg-edu-600 hover:bg-edu-700 active:bg-edu-800 text-white font-bold text-sm md:text-base rounded-xl shadow-md hover:shadow-lg transition transform active:scale-98 flex items-center justify-center border border-edu-500">
+                        <span>點我線上報名${deadlineText}</span>
+                       </button>`;
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col relative group ${isExpired ? 'grayscale opacity-80 bg-slate-50' : 'card-hover'}`;
+                
+                card.innerHTML = `
+                    <div class="relative h-56 md:h-60 bg-slate-100 overflow-hidden">
+                        <img src="${ev.image}" alt="${ev.title}" class="w-full h-full object-cover ${isExpired ? '' : 'group-hover:scale-105'} transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent opacity-80"></div>
+                        
+                        <div class="absolute top-3 left-3 flex space-x-1.5">
+                            ${modeTag}
+                            ${statusTag}
+                        </div>
+                        
+                        <!-- 圖片右上角：檢視與下載按鈕 -->
+                        <div class="absolute top-3 right-3 flex space-x-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <a href="${ev.image}" target="_blank" title="檢視圖片" class="w-8 h-8 bg-white/90 hover:bg-white text-slate-700 rounded-full flex items-center justify-center shadow-md transition transform hover:scale-110">
+                                <i class="fa-solid fa-expand text-sm"></i>
+                            </a>
+                            <a href="${ev.image}" download title="下載圖片" class="w-8 h-8 bg-white/90 hover:bg-white text-slate-700 rounded-full flex items-center justify-center shadow-md transition transform hover:scale-110">
+                                <i class="fa-solid fa-download text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                ${tagsHtml}
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 leading-snug mb-4">
+                                ${ev.title}
+                            </h3>
+                            
+                            <!-- 修改處 5：將活動資訊字體放大至 text-sm，並微調間距與 Icon 大小 (text-base) -->
+                            <div class="space-y-3 text-sm text-slate-700 font-medium mb-4">
+                                <div class="flex items-start text-slate-800">
+                                    <i class="fa-regular fa-clock w-5 text-center mt-0.5 text-slate-500 text-base"></i>
+                                    <span class="ml-1 text-left flex-1 leading-snug">${ev.date}</span>
+                                </div>
+                                <div class="flex items-start text-slate-800">
+                                    <i class="fa-solid fa-chalkboard-user w-5 text-center mt-0.5 text-slate-500 text-base"></i>
+                                    <span class="ml-1 text-left flex-1 leading-snug">講師：${ev.speaker}</span>
+                                </div>
+                                <div class="flex items-start text-slate-800">
+                                    <i class="fa-solid fa-location-dot w-5 text-center mt-0.5 text-slate-500 text-base"></i>
+                                    <span class="ml-1 text-left flex-1 leading-snug">地點：${ev.location}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            ${buttonHtml}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Modal 操作
+        function openRegisterModal(eventId) {
+            const ev = events.find(item => item.id === eventId);
+            if (!ev) return;
+
+            document.getElementById('modalEventTitle').innerText = ev.title;
+            
+            const formIframe = document.getElementById('googleFormIframe');
+            const spinner = document.getElementById('formLoadingSpinner');
+            const extBtn = document.getElementById('modalExternalFormBtn');
+
+            if (spinner) spinner.style.display = 'flex';
+            formIframe.onload = hideFormSpinner;
+
+            let rawUrl = ev.googleFormUrl || "https://docs.google.com/forms/";
+            let embedUrl = rawUrl;
+            
+            if (embedUrl.includes('docs.google.com/forms') && !embedUrl.includes('embedded=true')) {
+                embedUrl += (embedUrl.includes('?') ? '&' : '?') + 'embedded=true';
+            }
+
+            formIframe.src = embedUrl;
+            extBtn.href = rawUrl;
+
+            const modal = document.getElementById('registerModal');
+            const box = document.getElementById('registerModalBox');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function hideFormSpinner() {
+            const spinner = document.getElementById('formLoadingSpinner');
+            if (spinner) spinner.style.display = 'none';
+        }
+
+        function closeRegisterModal() {
+            const modal = document.getElementById('registerModal');
+            const box = document.getElementById('registerModalBox');
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('googleFormIframe').src = '';
+            }, 200);
+        }
+    </script>
+</body>
+</html>
